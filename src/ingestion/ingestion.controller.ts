@@ -8,6 +8,7 @@ import {
 } from "@nestjs/common";
 import { IngestionService } from "./ingestion.service";
 import { Ingestion } from "./ingestion.entity";
+import { ApiTags, ApiBody, ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 @Controller("ingestion")
 export class IngestionController {
@@ -15,6 +16,23 @@ export class IngestionController {
 
   // Trigger ingestion manually
   @Post("trigger")
+  @ApiOperation({ summary: "Ingestion is triggered" })
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        documentId: {
+          type: "string",
+          example: "2",
+        },
+      },
+      required: ["documentId"],
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: "The document ingestion has been successfully created.",
+  })
   triggerIngestion(@Body() body: { documentId: number }): Promise<Ingestion> {
     return this.ingestionService.triggerIngestion(body.documentId);
   }

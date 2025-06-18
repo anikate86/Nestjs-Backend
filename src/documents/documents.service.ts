@@ -3,6 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Document } from "./document.entity";
 import { Repository } from "typeorm";
+import { CreateDocumentDto } from "./dto/create-document.dto";
 
 @Injectable()
 export class DocumentsService {
@@ -11,7 +12,7 @@ export class DocumentsService {
     private documentRepo: Repository<Document>
   ) {}
 
-  async create(data: Partial<Document>) {
+  async create(data: CreateDocumentDto) {
     const doc = this.documentRepo.create(data); // sets owner as { id: ... }
     return await this.documentRepo.save(doc);
   }
