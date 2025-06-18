@@ -5,6 +5,9 @@ This docs contains
 1. Running the NestJS project locally
 2. Running test cases
 3. Deploying the project using Docker
+4. Swagger Documentation
+
+## Also I will be attaching the psotman collection from which you can verify
 
 ---
 
@@ -122,3 +125,9 @@ To stop:
 docker-compose down
 
 ✅ You’re all set to develop, test, and deploy your NestJS backend!
+
+###4 Før Swagger Documentation
+Just run the project
+
+Call this API
+http://localhost:3000/api
