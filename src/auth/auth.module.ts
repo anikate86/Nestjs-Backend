@@ -13,7 +13,7 @@ import { LocalAuthGuard } from "./guards/local-auth.guard"; // ⬅️ Optional, 
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: "jwt-secret", // ✅ Use process.env.JWT_SECRET in production
+      secret: process.env.JWT_SECRET, // ✅ Use process.env.JWT_SECRET in production
       signOptions: { expiresIn: "1h" },
     }),
   ],

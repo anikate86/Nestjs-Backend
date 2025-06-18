@@ -1,18 +1,22 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from "@nestjs/common";
+import { UsersService } from "../users/users.service";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findByEmail(email);
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
       return result;
     }
@@ -26,8 +30,13 @@ export class AuthService {
     };
   }
 
-  async register(userDto: any) {
-    const user = await this.usersService.create(userDto);
-    return this.login(user);
+  async register(userDto: { email: string; password: string }) {
+    const existingUser = await this.usersService.findByEmail(userDto.email);
+    if (existingUser) {
+      throw new BadRequestException("User with this email already exists");
+    }
+
+    await this.usersService.create(userDto);
+    return { message: "User created successfully, please login" };
   }
 }

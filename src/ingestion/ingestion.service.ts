@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Ingestion, IngestionStatus } from './ingestion.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Ingestion, IngestionStatus } from "./ingestion.entity";
 
 @Injectable()
 export class IngestionService {
   constructor(
     @InjectRepository(Ingestion)
-    private ingestionRepo: Repository<Ingestion>,
+    private ingestionRepo: Repository<Ingestion>
   ) {}
 
   async triggerIngestion(documentId: number): Promise<Ingestion> {
@@ -18,7 +18,11 @@ export class IngestionService {
     return this.ingestionRepo.save(task);
   }
 
-  async updateStatus(id: number, status: IngestionStatus, errorMessage?: string) {
+  async updateStatus(
+    id: number,
+    status: IngestionStatus,
+    errorMessage?: string
+  ) {
     const task = await this.ingestionRepo.findOne({ where: { id } });
     if (!task) return null;
 
@@ -28,10 +32,13 @@ export class IngestionService {
   }
 
   async getAllTasks(): Promise<Ingestion[]> {
-    return this.ingestionRepo.find({ order: { createdAt: 'DESC' } });
+    return this.ingestionRepo.find({ order: { createdAt: "DESC" } });
   }
 
-  async getTaskById(id: number): Promise<Ingestion| null> {
+  async getTaskById(id: number): Promise<Ingestion | null> {
     return this.ingestionRepo.findOne({ where: { id } });
+  }
+  async getTaskByDocId(documentId: number): Promise<Ingestion[]> {
+    return this.ingestionRepo.find({ where: { document: { id: documentId } } });
   }
 }

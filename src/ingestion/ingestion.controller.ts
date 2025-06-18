@@ -5,16 +5,16 @@ import {
   Param,
   Body,
   ParseIntPipe,
-} from '@nestjs/common';
-import { IngestionService } from './ingestion.service';
-import { Ingestion } from './ingestion.entity';
+} from "@nestjs/common";
+import { IngestionService } from "./ingestion.service";
+import { Ingestion } from "./ingestion.entity";
 
-@Controller('ingestion')
+@Controller("ingestion")
 export class IngestionController {
   constructor(private readonly ingestionService: IngestionService) {}
 
   // Trigger ingestion manually
-  @Post('trigger')
+  @Post("trigger")
   triggerIngestion(@Body() body: { documentId: number }): Promise<Ingestion> {
     return this.ingestionService.triggerIngestion(body.documentId);
   }
@@ -26,8 +26,16 @@ export class IngestionController {
   }
 
   // Get a specific ingestion task by ID
-  @Get(':id')
-  getById(@Param('id', ParseIntPipe) id: number): Promise<Ingestion | null> {
+  @Get(":id")
+  getById(@Param("id", ParseIntPipe) id: number): Promise<Ingestion | null> {
     return this.ingestionService.getTaskById(id);
+  }
+
+  // Get a specific ingestion task by documentId
+  @Get("doc/:documentId")
+  getByDocId(
+    @Param("documentId", ParseIntPipe) documentId: number
+  ): Promise<Ingestion[]> {
+    return this.ingestionService.getTaskByDocId(documentId);
   }
 }
